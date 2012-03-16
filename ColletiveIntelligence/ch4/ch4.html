@@ -1,0 +1,86 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="http://jquery-tagcloud.googlecode.com/files/jquery.tagcloud-2.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	generate();
+});
+function generate(){
+	var title = document.getElementById('title').innerHTML;
+	var body = document.getElementById('body').innerHTML;
+
+	extractMetaData(title, body);
+}
+
+function extractMetaData(title, body){
+	// alert(title);
+	var titleTags = getMetaData(title);
+	var bodyTags = getMetaData(body);
+
+
+	$("#titleTags").tagCloud(titleTags);
+	$("#bodyTags").tagCloud(bodyTags);
+}
+
+
+function getMetaData(text){
+	var keywordMap = {};
+	var tokens = text.split(' ');
+
+	for (var i = 0; i<tokens.length; i++) {
+
+		var token = normalizeToken(tokens[i]);
+
+		if(acceptToken(token)){
+			var count = keywordMap[token];
+			if(null == count){
+				count = 0;
+			}
+			count++;
+			
+			keywordMap[token]=count;
+		}
+	}
+
+	return createMetaDataVector(keywordMap);
+}
+
+function normalizeToken(token){
+	var normalizedToken = token.toLowerCase().trim();
+	if(normalizedToken.substr(-1) === '.' || normalizedToken.substr(-1) === ','){
+		var size = normalizedToken.length;
+		normalizedToken = normalizedToken.substring(0, size -1);
+	}
+	return normalizedToken;
+}
+
+function acceptToken(text){
+	return true;
+}
+
+function createMetaDataVector(map){
+	var tags = new Array();
+	for(var key in map){
+		var tagObject={tag:key, count:map[key]};
+		tags.push(tagObject);
+	}
+	return tags;
+}
+
+</script>
+<body>
+<p>Title:<div id='title'>Collective Intelligence and Web2.0</div></p>
+<p>Body:<div id='body'>Web2.0 is all about connecting users to users, inviting users to participate, and applying their collective intelligence to improve the application. Collective intelligence enhances the user experience.</div>
+</p>
+<input type='button' onclick='generate()' value='Generate' />
+<p> title tags <br />
+<div id="titleTags"> </div>
+</p>
+
+<p> body tags <br />
+<div id="bodyTags"> </div>
+</p>
+
+</body>
+</html>
