@@ -126,6 +126,7 @@ public class ArgsTest extends TestCase {
 			fail();
 		} catch (ArgsException e) {
 			assertEquals(ArgsException.ErrorCode.MISSING_DOUBLE, e.getErrorCode());
-			assertEquals('x', e.getErrorArgumentId()); 
+			assertEquals('x', e.getErrorArgumentId());
+		}
 	}
 } 
